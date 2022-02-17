@@ -1,0 +1,23 @@
+name: HaxRDP
+
+on: [push, workflow_dispatch]
+
+jobs:
+  build:
+
+     runs-on: windows-latest
+
+     steps:
+     - name: DOWNLOADING
+       run: Invoke-WebRequest https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-atable-windows-amd64.zip -Outfile ngrok.zip
+     - name: EXTRACT
+       RUN: Expand-Archive ngrok.zip
+     - name: AUTENTIFIKASI
+       run: .\ngrok\ngrok.exe athtoken 25Dd9nChmOmJ8lz0aHKNWMSu5Wa_83DRCAHeSGHdnHY6ug2KB
+     - name: ENABLE TS
+       run: Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server'-name "fDenyTSConnections" -Value 0
+     - run: Enable-NetFirewallrule -DisplayGroup "Remote Desktop"
+     - run: Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\winstations\RDP-Tcp' -name "UserAuthentication" -Value 1
+     - run: Set_localuser _Name "runneradmin" -Pasword (ConvertTo-SecureString -AsplainText "P@ssword!" _Force)
+     - name: DONE!
+       run: .\ngrok\ngrok.exe tcp 3389
